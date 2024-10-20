@@ -372,6 +372,7 @@ class TrainerBase:
         if self.num_gpus > 1:
             dist.barrier()
         if self.rank == 0:
+            t0 = time.time()
             source_state = self.model.state_dict()
             rate = self.ema_rate
             for key, value in self.ema_state.items():
@@ -379,6 +380,8 @@ class TrainerBase:
                     self.ema_state[key] = source_state[key]
                 else:
                     self.ema_state[key].mul_(rate).add_(source_state[key].detach().data, alpha=1-rate)
+            t1 = time.time()
+            print(f"update ema spent {t1-t0} seconds")
 
     def logging_image(self, im_tensor, tag, phase, add_global_step=False, nrow=8):
         """
