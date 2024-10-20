@@ -120,7 +120,7 @@ class RealESRGANDataset(data.Dataset):
                 # change another file to read
                 index = random.randint(0, self.__len__())
                 gt_path = self.paths[index]
-                time.sleep(1)  # sleep 1s for occasional server congestion
+                time.sleep(0.1)  # sleep 1s for occasional server congestion
             # else:
                 # break
             finally:
