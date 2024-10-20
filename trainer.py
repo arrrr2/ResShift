@@ -36,10 +36,6 @@ import torchvision.utils as vutils
 from torch.nn.parallel import DistributedDataParallel as DDP
 
 
-torch.set_num_threads(os.cpu_count() // 4)
-
-
-
 class TrainerBase:
     def __init__(self, configs):
         self.configs = configs
