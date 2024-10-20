@@ -37,7 +37,7 @@ from torch.nn.parallel import DistributedDataParallel as DDP
 
 
 torch.set_num_threads(os.cpu_count() // 4)
-os['OMP_NUM_THREADS'] = os.cpu_count() // 8
+
 
 
 class TrainerBase:
