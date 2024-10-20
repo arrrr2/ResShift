@@ -314,25 +314,28 @@ class TrainerBase:
             self.current_iters = ii + 1
 
             # prepare data
+            t0 = time.time()
             data = self.prepare_data(next(self.dataloaders['train']))
-
+            t1 = time.time()
             # training phase
             self.training_step(data)
-
+            t2 = time.time()
             # validation phase
             if 'val' in self.dataloaders and (ii+1) % self.configs.train.get('val_freq', 10000) == 0:
                 self.validation()
-
+            t3 = time.time()
             #update learning rate
             self.adjust_lr()
-
+            t4 = time.time()
             # save checkpoint
             if (ii+1) % self.configs.train.save_freq == 0:
                 self.save_ckpt()
-
+            t5 = time.time()
             if (ii+1) % num_iters_epoch == 0 and self.sampler is not None:
                 self.sampler.set_epoch(ii+1)
+            t6 = time.time()
 
+            print(f"data={(t1-t0):.4f},step={(t2-t1):.4f}, oth={(t6-t2):.4f}")
         # close the tensorboard
         self.close_logger()
 
@@ -372,7 +375,6 @@ class TrainerBase:
         if self.num_gpus > 1:
             dist.barrier()
         if self.rank == 0:
-            t0 = time.time()
             source_state = self.model.state_dict()
             rate = self.ema_rate
             for key, value in self.ema_state.items():
@@ -380,8 +382,6 @@ class TrainerBase:
                     self.ema_state[key] = source_state[key]
                 else:
                     self.ema_state[key].mul_(rate).add_(source_state[key].detach().data, alpha=1-rate)
-            t1 = time.time()
-            print(f"update ema spent {t1-t0} seconds")
 
     def logging_image(self, im_tensor, tag, phase, add_global_step=False, nrow=8):
         """
