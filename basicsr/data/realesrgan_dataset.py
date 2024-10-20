@@ -235,7 +235,7 @@ class RealESRGANDataset(data.Dataset):
 
         return_d = {'gt': img_gt, 'kernel1': kernel, 'kernel2': kernel2, 'sinc_kernel': sinc_kernel, 'gt_path': gt_path}
         t3 = time.time()
-        print(f'fetch:{(t1-t0):.4d}, filtering:{((t3-t1)):.4d}')
+        print(f'fetch:{(t1-t0):.4}, filtering:{((t3-t1)):.4}')
         return return_d
 
     def __len__(self):
