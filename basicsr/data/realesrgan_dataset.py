@@ -100,7 +100,7 @@ class RealESRGANDataset(data.Dataset):
         self.rescale_gt = opt['rescale_gt']
 
     def __getitem__(self, index):
-        t0 = time.time()
+
         if self.file_client is None:
             self.file_client = FileClient(self.io_backend_opt.pop('type'), **self.io_backend_opt)
 
@@ -125,7 +125,7 @@ class RealESRGANDataset(data.Dataset):
                 # break
             finally:
                 retry -= 1
-        t1 = time.time()
+
         if self.mode == 'testing':
             if not hasattr(self, 'test_aug'):
                 self.test_aug = albumentations.Compose([
@@ -234,8 +234,8 @@ class RealESRGANDataset(data.Dataset):
         kernel2 = torch.FloatTensor(kernel2)
 
         return_d = {'gt': img_gt, 'kernel1': kernel, 'kernel2': kernel2, 'sinc_kernel': sinc_kernel, 'gt_path': gt_path}
-        t3 = time.time()
-        print(f'fetch:{(t1-t0):.4}, filtering:{((t3-t1)):.4}')
+
+
         return return_d
 
     def __len__(self):
