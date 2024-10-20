@@ -1,0 +1,4 @@
+*cache*
+logging/
+*.log
+weights/

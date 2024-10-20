@@ -36,6 +36,10 @@ import torchvision.utils as vutils
 from torch.nn.parallel import DistributedDataParallel as DDP
 
 
+torch.set_num_threads(os.cpu_count() // 4)
+os['OMP_NUM_THREADS'] = os.cpu_count() // 8
+
+
 class TrainerBase:
     def __init__(self, configs):
         self.configs = configs
@@ -760,6 +764,7 @@ class TrainerDifIR(TrainerBase):
                 first_stage_model=self.autoencoder,
                 model_kwargs=model_kwargs,
                 noise=noise,
+                upsampling=self.configs.train.upsampling
             )
             if last_batch or self.num_gpus <= 1:
                 losses, z0_pred, z_t = self.backward_step(compute_losses, micro_data, num_grad_accumulate, tt)
