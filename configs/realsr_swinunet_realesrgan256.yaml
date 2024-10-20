@@ -154,7 +154,7 @@ train:
   batch: [64, 8]                
   microbatch: 16
   num_workers: 4
-  prefetch_factor: 16
+  prefetch_factor: 4
   upsampling: 'bicubic'                
   # optimization settings
   weight_decay: 0               
