@@ -872,7 +872,7 @@ class UNetModelSwin(nn.Module):
         """
         hs = []
         emb = self.time_embed(timestep_embedding(timesteps, self.model_channels)).type(self.dtype)
-
+        print(x.shape, lq.shape)
         if lq is not None:
             assert self.cond_lq
             if mask is not None:
@@ -880,7 +880,7 @@ class UNetModelSwin(nn.Module):
                 lq = th.cat([lq, mask], dim=1)
             lq = self.feature_extractor(lq.type(self.dtype))
             x = th.cat([x, lq], dim=1)
-
+        
 
         h = x.type(self.dtype)
         for ii, module in enumerate(self.input_blocks):
