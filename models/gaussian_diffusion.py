@@ -139,6 +139,8 @@ class GaussianDiffusion:
         self.latent_flag = latent_flag
         self.sf = sf
 
+        print(self.sf)
+
         # Use float64 for accuracy.
         self.sqrt_etas = sqrt_etas
         self.etas = sqrt_etas**2
