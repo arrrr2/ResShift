@@ -79,7 +79,59 @@ class Upsample(nn.Module):
         if self.use_conv:
             x = self.conv(x)
         return x
-
+    
+class Upsample_shuffled(nn.Module):
+    """
+    An upsampling layer using PixelShuffle with an optional convolution after upsampling.
+    :param channels: Channels in the inputs.
+    :param use_conv: A bool determining if a convolution is applied after PixelShuffle.
+    :param dims: Determines if the signal is 2D. Only 2D is supported in this implementation.
+    :param out_channels: Channels in the outputs. If None, it defaults to `channels`.
+    """
+    
+    def __init__(self, channels, use_conv, dims=2, out_channels=None):
+        super().__init__()
+        assert dims == 2, "Only 2D upsampling is supported with PixelShuffle."
+        
+        self.channels = channels
+        self.out_channels = out_channels or channels
+        self.use_conv = use_conv
+        self.scale_factor = 2  # 放大因子固定为2
+        
+        # 卷积层将输入通道数转换为 out_channels * (scale_factor^2)
+        self.conv = conv_nd(
+            dims, 
+            self.channels, 
+            self.out_channels * (self.scale_factor ** 2), 
+            kernel_size=3, 
+            padding=1
+        )
+        
+        # 可选的卷积层，在 PixelShuffle 之后应用
+        if self.use_conv:
+            self.post_conv = conv_nd(
+                dims, 
+                self.out_channels, 
+                self.out_channels, 
+                kernel_size=3, 
+                padding=1
+            )
+    
+    def forward(self, x):
+        assert x.shape[1] == self.channels, f"Expected input with {self.channels} channels, but got {x.shape[1]} channels."
+        
+        # 先通过卷积层调整通道数
+        x = self.conv(x)
+        
+        # 使用 PixelShuffle 进行上采样
+        x = F.pixel_shuffle(x, self.scale_factor)
+        
+        # 如果需要，应用额外的卷积层
+        if self.use_conv:
+            x = self.post_conv(x)
+        
+        return x
+    
 class Downsample(nn.Module):
     """
     A downsampling layer with an optional convolution.
@@ -687,18 +739,36 @@ class UNetModelSwin(nn.Module):
         )
 
         if cond_lq and lq_size == image_size:
+            # If low-quality size matches image size, use identity mapping
             self.feature_extractor = nn.Identity()
             base_chn = 4 if cond_mask else 3
         else:
             feature_extractor = []
             feature_chn = 4 if cond_mask else 3
             base_chn = 16
-            for ii in range(int(math.log(lq_size / image_size) / math.log(2))):
-                feature_extractor.append(nn.Conv2d(feature_chn, base_chn, 3, 1, 1))
-                feature_extractor.append(nn.SiLU())
-                feature_extractor.append(Downsample(base_chn, True, out_channels=base_chn*2))
-                base_chn *= 2
-                feature_chn = base_chn
+            
+            # Determine the number of scaling steps
+            if lq_size > image_size:
+                # Calculate how many times to downsample by a factor of 2
+                n_steps = int(math.log(lq_size / image_size, 2))
+                for _ in range(n_steps):
+                    feature_extractor.append(nn.Conv2d(feature_chn, base_chn, kernel_size=3, stride=1, padding=1))
+                    feature_extractor.append(nn.SiLU())
+                    feature_extractor.append(Downsample(base_chn, True, out_channels=base_chn * 2))
+                    base_chn *= 2
+                    feature_chn = base_chn
+            elif lq_size < image_size:
+                # Calculate how many times to upsample by a factor of 2
+                n_steps = int(math.log(image_size / lq_size, 2))
+                for _ in range(n_steps):
+                    feature_extractor.append(nn.Conv2d(feature_chn, base_chn, kernel_size=3, stride=1, padding=1))
+                    feature_extractor.append(nn.SiLU())
+                    feature_extractor.append(Upsample_shuffled(base_chn, True, out_channels=base_chn // 2))
+                    base_chn = base_chn // 2
+                    feature_chn = base_chn
+            else:
+                raise NotImplementedError
+
             self.feature_extractor = nn.Sequential(*feature_extractor)
 
         ch = input_ch = int(channel_mult[0] * model_channels)
@@ -872,7 +942,6 @@ class UNetModelSwin(nn.Module):
         """
         hs = []
         emb = self.time_embed(timestep_embedding(timesteps, self.model_channels)).type(self.dtype)
-        print(x.shape, lq.shape)
         if lq is not None:
             assert self.cond_lq
             if mask is not None:
