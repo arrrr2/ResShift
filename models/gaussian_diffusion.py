@@ -555,12 +555,12 @@ class GaussianDiffusion:
         if model_kwargs is None:
             model_kwargs = {}
         
-        
+        print(f"y.shape:{y.shape}; x_start.shape:{x_start.shape}")
 
         z_y = self.encode_first_stage(y, first_stage_model, up_sample=True, upsampling=upsampling)
         z_start = self.encode_first_stage(x_start, first_stage_model, up_sample=False)
 
-        print(f"z_y.shape:{z_y.shape}; z_start.shape:{x_start.shape}")
+        print(f"z_y.shape:{z_y.shape}; z_start.shape:{z_start.shape}")
 
         if noise is None:
             noise = th.randn_like(z_start)
