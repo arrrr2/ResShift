@@ -68,7 +68,7 @@ autoencoder:
       padding_mode: zeros
 
 degradation:
-  sf: 4
+  sf: 16
   # the first degradation process
   resize_prob: [0.2, 0.7, 0.1]  # up, down, keep
   resize_range: [0.15, 1.5]
@@ -151,8 +151,8 @@ train:
   lr_schedule: ~
   warmup_iterations: 5000
   # dataloader
-  batch: [64, 8]                
-  microbatch: 16
+  batch: [72, 8]                
+  microbatch: 24
   num_workers: 4
   prefetch_factor: 4
   upsampling: 'nearest-exact'                
