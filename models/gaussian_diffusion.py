@@ -569,6 +569,7 @@ class GaussianDiffusion:
         terms = {}
 
         if self.loss_type == LossType.MSE or self.loss_type == LossType.WEIGHTED_MSE:
+            print(model_kwargs)
             model_output = model(self._scale_input(z_t, t), t, **model_kwargs)
             target = {
                 ModelMeanType.START_X: z_start,
