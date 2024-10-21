@@ -5,7 +5,7 @@ model:
   target: models.unet.UNetModelSwin
   ckpt_path: ~
   params:
-    image_size: 64
+    image_size: 16
     in_channels: 3
     model_channels: 160
     out_channels: 3
