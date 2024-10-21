@@ -139,7 +139,6 @@ class GaussianDiffusion:
         self.latent_flag = latent_flag
         self.sf = sf
 
-        print(self.sf)
 
         # Use float64 for accuracy.
         self.sqrt_etas = sqrt_etas
@@ -555,6 +554,8 @@ class GaussianDiffusion:
         """
         if model_kwargs is None:
             model_kwargs = {}
+        
+        print(x_start.shape, y.shape)
 
         z_y = self.encode_first_stage(y, first_stage_model, up_sample=True, upsampling=upsampling)
         z_start = self.encode_first_stage(x_start, first_stage_model, up_sample=False)
