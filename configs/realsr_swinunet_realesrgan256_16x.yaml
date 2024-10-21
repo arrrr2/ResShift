@@ -29,7 +29,7 @@ model:
 diffusion:
   target: models.script_util.create_gaussian_diffusion
   params:
-    sf: 4
+    sf: 16
     schedule_name: exponential
     schedule_kwargs:
       power: 0.3
