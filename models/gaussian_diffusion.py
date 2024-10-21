@@ -504,7 +504,6 @@ class GaussianDiffusion:
         if up_sample and self.sf != 1:
             # print(upsampling)
             y = F.interpolate(y, scale_factor=self.sf, mode=upsampling)
-            print(self.sf, y.shape)
         if first_stage_model is None:
             return y
         else:
@@ -560,6 +559,8 @@ class GaussianDiffusion:
 
         z_y = self.encode_first_stage(y, first_stage_model, up_sample=True, upsampling=upsampling)
         z_start = self.encode_first_stage(x_start, first_stage_model, up_sample=False)
+
+        print(f"z_y.shape:{z_y.shape}; z_start.shape:{x_start.shape}")
 
         if noise is None:
             noise = th.randn_like(z_start)
