@@ -706,6 +706,7 @@ class UNetModelSwin(nn.Module):
         cond_lq=True,
         cond_mask=False,
         lq_size=256,
+        use_checkpoint=False,
     ):
         super().__init__()
 
@@ -730,6 +731,7 @@ class UNetModelSwin(nn.Module):
         self.num_head_channels = num_head_channels
         self.cond_lq = cond_lq
         self.cond_mask = cond_mask
+        self.use_checkpoint = use_checkpoint
 
         time_embed_dim = model_channels * 4
         self.time_embed = nn.Sequential(
@@ -807,7 +809,7 @@ class UNetModelSwin(nn.Module):
                                 drop=dropout,
                                 attn_drop=0.,
                                 drop_path=0.,
-                                use_checkpoint=False,
+                                use_checkpoint=self.use_checkpoint,
                                 norm_layer=normalization,
                                 patch_norm=patch_norm,
                                  )
@@ -859,7 +861,7 @@ class UNetModelSwin(nn.Module):
                     drop=dropout,
                     attn_drop=0.,
                     drop_path=0.,
-                    use_checkpoint=False,
+                    use_checkpoint=self.use_checkpoint,
                     norm_layer=normalization,
                     patch_norm=patch_norm,
                      ),
@@ -903,7 +905,7 @@ class UNetModelSwin(nn.Module):
                                 drop=dropout,
                                 attn_drop=0.,
                                 drop_path=0.,
-                                use_checkpoint=False,
+                                use_checkpoint=self.use_checkpoint,
                                 norm_layer=normalization,
                                 patch_norm=patch_norm,
                                  )

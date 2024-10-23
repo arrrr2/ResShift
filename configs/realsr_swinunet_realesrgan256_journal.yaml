@@ -48,6 +48,7 @@ model:
     mlp_ratio: 4
     cond_lq: True
     lq_size: 64
+    use_checkpoint: False
 
 diffusion:
   target: models.script_util.create_gaussian_diffusion
@@ -152,7 +153,7 @@ train:
   warmup_iterations: 5000
   # dataloader
   batch: [96, 8]                
-  microbatch: 8
+  microbatch: 12
   num_workers: 8
   prefetch_factor: 2
   upsampling: 'bicubic'            

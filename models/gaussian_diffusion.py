@@ -500,7 +500,7 @@ class GaussianDiffusion:
                 out = out.type(data_dtype)
             return out
 
-    def encode_first_stage(self, y, first_stage_model, upsampling, up_sample=False):
+    def encode_first_stage(self, y, first_stage_model, upsampling=None, up_sample=False):
         data_dtype = y.dtype
         model_dtype = next(first_stage_model.parameters()).dtype
         if up_sample and self.sf != 1:
