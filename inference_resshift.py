@@ -214,7 +214,7 @@ def main():
             mask_path=mask_path,
             bs=args.bs,
             noise_repeat=False,
-            upsampling=configs.train.sampling
+            upsampling=configs.train.upsampling
             )
 
 if __name__ == '__main__':
