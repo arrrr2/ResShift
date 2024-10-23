@@ -369,7 +369,7 @@ class GaussianDiffusion:
         self,
         y,
         model,
-        sampling,
+        upsampling,
         first_stage_model=None,
         consistencydecoder=None,
         noise=None,
@@ -402,7 +402,7 @@ class GaussianDiffusion:
         for sample in self.p_sample_loop_progressive(
             y,
             model,
-            sampling, 
+            upsampling, 
             first_stage_model=first_stage_model,
             noise=noise,
             noise_repeat=noise_repeat,
@@ -422,7 +422,7 @@ class GaussianDiffusion:
         return out
 
     def p_sample_loop_progressive(
-            self, y, model, sampling,
+            self, y, model, upsampling,
             first_stage_model=None,
             noise=None,
             noise_repeat=False,
