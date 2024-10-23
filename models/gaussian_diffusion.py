@@ -504,7 +504,7 @@ class GaussianDiffusion:
         data_dtype = y.dtype
         model_dtype = next(first_stage_model.parameters()).dtype
         if up_sample and self.sf != 1:
-            print(upsampling)
+            # print(upsampling)
             y = F.interpolate(y, scale_factor=self.sf, mode=upsampling)
         if first_stage_model is None:
             return y
