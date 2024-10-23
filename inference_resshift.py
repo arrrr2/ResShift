@@ -140,7 +140,7 @@ def get_configs(args):
         raise TypeError(f"Unexpected task type: {args.task}!")
     
     configs = OmegaConf.load(args.conf_path)
-    ckpt_path = args.ckpt_path
+    ckpt_path = Path(args.ckpt_path)
 
 
     # prepare the checkpoint
