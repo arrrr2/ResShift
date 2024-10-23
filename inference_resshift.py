@@ -72,6 +72,14 @@ def get_parser(**parser_kwargs):
             choices=['realsr', 'bicsr', 'inpaint_imagenet', 'inpaint_face', 'faceir', 'deblur'],
             help="Chopping forward.",
             )
+    parser.add_argument(
+            "--conf_path",
+            type=str,
+            )
+    parser.add_argument(
+            "--ckpt_path",
+            type=str,
+            )
     args = parser.parse_args()
 
     return args
@@ -130,6 +138,8 @@ def get_configs(args):
         vqgan_path = ckpt_dir / f'autoencoder_vq_f4.pth'
     else:
         raise TypeError(f"Unexpected task type: {args.task}!")
+    
+
 
     # prepare the checkpoint
     if not ckpt_path.exists():
@@ -146,6 +156,10 @@ def get_configs(args):
             progress=True,
             file_name=vqgan_path.name,
             )
+
+    configs = OmegaConf.load(args.conf_path)
+    ckpt_path = args.ckpt_path
+
 
     configs.model.ckpt_path = str(ckpt_path)
     configs.diffusion.params.sf = args.scale

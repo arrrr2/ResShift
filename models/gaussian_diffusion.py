@@ -422,7 +422,7 @@ class GaussianDiffusion:
         return out
 
     def p_sample_loop_progressive(
-            self, y, model,
+            self, y, model, sampling,
             first_stage_model=None,
             noise=None,
             noise_repeat=False,
@@ -442,7 +442,7 @@ class GaussianDiffusion:
         """
         if device is None:
             device = next(model.parameters()).device
-        z_y = self.encode_first_stage(y, first_stage_model, up_sample=True)
+        z_y = self.encode_first_stage(y, first_stage_model, sampling=sampling, up_sample=True)
 
         # generating noise
         if noise is None:
@@ -504,7 +504,7 @@ class GaussianDiffusion:
         data_dtype = y.dtype
         model_dtype = next(first_stage_model.parameters()).dtype
         if up_sample and self.sf != 1:
-            # print(upsampling)
+            print(upsampling)
             y = F.interpolate(y, scale_factor=self.sf, mode=upsampling)
         if first_stage_model is None:
             return y

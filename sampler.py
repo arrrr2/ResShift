@@ -161,7 +161,7 @@ class BaseSampler:
             params.requires_grad = False
 
 class ResShiftSampler(BaseSampler):
-    def sample_func(self, y0, noise_repeat=False, mask=False):
+    def sample_func(self, y0, upsampling, noise_repeat=False, mask=False):
         '''
         Input:
             y0: n x c x h x w torch tensor, low-quality image, [-1, 1], RGB
@@ -202,6 +202,7 @@ class ResShiftSampler(BaseSampler):
                 denoised_fn=None,
                 model_kwargs=model_kwargs,
                 progress=False,
+                upsampling=upsampling,
                 )    # This has included the decoding for latent space
 
         if flag_pad:
@@ -209,7 +210,7 @@ class ResShiftSampler(BaseSampler):
 
         return results.clamp_(-1.0, 1.0)
 
-    def inference(self, in_path, out_path, mask_path=None, mask_back=True, bs=1, noise_repeat=False):
+    def inference(self, in_path, out_path, upsampling, mask_path=None, mask_back=True, bs=1, noise_repeat=False):
         '''
         Inference demo.
         Input:
@@ -248,6 +249,7 @@ class ResShiftSampler(BaseSampler):
                                 im_lq_pch,
                                 noise_repeat=noise_repeat,
                                 mask=mask_pch,
+                                upsampling=upsampling,
                                 )     # 1 x c x h x w, [-1, 1]
                     im_spliter.update(im_sr_pch, index_infos)
                 im_sr_tensor = im_spliter.gather()
@@ -258,6 +260,7 @@ class ResShiftSampler(BaseSampler):
                             im_lq_tensor,
                             noise_repeat=noise_repeat,
                             mask=mask,
+                            upsampling=upsampling
                             )     # 1 x c x h x w, [-1, 1]
 
             im_sr_tensor = im_sr_tensor * 0.5 + 0.5
