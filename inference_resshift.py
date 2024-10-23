@@ -139,6 +139,8 @@ def get_configs(args):
     else:
         raise TypeError(f"Unexpected task type: {args.task}!")
     
+    configs = OmegaConf.load(args.conf_path)
+    ckpt_path = args.ckpt_path
 
 
     # prepare the checkpoint
@@ -157,8 +159,6 @@ def get_configs(args):
             file_name=vqgan_path.name,
             )
 
-    configs = OmegaConf.load(args.conf_path)
-    ckpt_path = args.ckpt_path
 
 
     configs.model.ckpt_path = str(ckpt_path)
