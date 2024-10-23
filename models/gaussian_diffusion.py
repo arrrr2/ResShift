@@ -369,6 +369,7 @@ class GaussianDiffusion:
         self,
         y,
         model,
+        sampling,
         first_stage_model=None,
         consistencydecoder=None,
         noise=None,
@@ -401,6 +402,7 @@ class GaussianDiffusion:
         for sample in self.p_sample_loop_progressive(
             y,
             model,
+            sampling, 
             first_stage_model=first_stage_model,
             noise=noise,
             noise_repeat=noise_repeat,
@@ -498,7 +500,7 @@ class GaussianDiffusion:
                 out = out.type(data_dtype)
             return out
 
-    def encode_first_stage(self, y, first_stage_model, up_sample=False, upsampling='bicubic'):
+    def encode_first_stage(self, y, first_stage_model, upsampling, up_sample=False):
         data_dtype = y.dtype
         model_dtype = next(first_stage_model.parameters()).dtype
         if up_sample and self.sf != 1:

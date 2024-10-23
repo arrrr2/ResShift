@@ -199,7 +199,8 @@ def main():
             args.out_path,
             mask_path=mask_path,
             bs=args.bs,
-            noise_repeat=False
+            noise_repeat=False,
+            upsampling=configs.train.sampling
             )
 
 if __name__ == '__main__':
