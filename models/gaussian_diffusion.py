@@ -442,7 +442,7 @@ class GaussianDiffusion:
         """
         if device is None:
             device = next(model.parameters()).device
-        z_y = self.encode_first_stage(y, first_stage_model, sampling=sampling, up_sample=True)
+        z_y = self.encode_first_stage(y, first_stage_model, upsampling=upsampling, up_sample=True)
 
         # generating noise
         if noise is None:
