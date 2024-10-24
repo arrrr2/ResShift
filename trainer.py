@@ -904,6 +904,7 @@ class TrainerDifIR(TrainerBase):
                         model_kwargs=model_kwargs,
                         device=f"cuda:{self.rank}",
                         progress=False,
+                        upsampling=self.configs.train.upsampling
                         ):
                     sample_decode = {}
                     if num_iters in indices:
