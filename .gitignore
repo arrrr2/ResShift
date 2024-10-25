@@ -2,4 +2,4 @@
 logging/
 *.log
 weights/
-testdata/
+testdata/*
