@@ -828,7 +828,7 @@ class TrainerDifIR(TrainerBase):
                         self.current_iters,
                         self.configs.train.iterations)
                 for jj, current_record in enumerate(record_steps):
-                    log_str += 't({:d}):{:.1e}/{:.1e}, '.format(
+                    log_str += 't({:d}):{:.4f}/{:4f}, '.format(
                             current_record,
                             self.loss_mean['loss'][jj].item(),
                             self.loss_mean['mse'][jj].item(),
@@ -934,7 +934,7 @@ class TrainerDifIR(TrainerBase):
                             ).sum().item()
 
                 if (ii + 1) % self.configs.train.log_freq[2] == 0:
-                    self.logger.info(f'Validation: {ii+1:02d}/{num_iters_epoch:02d}...')
+                    # self.logger.info(f'Validation: {ii+1:02d}/{num_iters_epoch:02d}...')
 
                     im_sr_all = rearrange(im_sr_all, 'b (k c) h w -> (b k) c h w', c=im_lq.shape[1])
                     self.logging_image(
