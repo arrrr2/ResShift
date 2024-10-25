@@ -318,6 +318,7 @@ class TrainerBase:
 
             # validation phase
             if 'val' in self.dataloaders and (ii+1) % self.configs.train.get('val_freq', 10000) == 0:
+                torch.cuda.empty_cache()
                 self.validation()
 
             #update learning rate
