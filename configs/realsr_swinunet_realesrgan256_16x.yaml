@@ -152,8 +152,8 @@ train:
   lr_schedule: ~
   warmup_iterations: 5000
   # dataloader
-  batch: [72, 8]                
-  microbatch: 24
+  batch: [48, 8]                
+  microbatch: 16
   num_workers: 4
   prefetch_factor: 4
   upsampling: 'bicubic'                
