@@ -422,7 +422,7 @@ class GaussianDiffusion:
         return out
 
     def p_sample_loop_progressive(
-            self, y, model, upsampling,
+            self, y, model, upsampling, latent_cond,
             first_stage_model=None,
             noise=None,
             noise_repeat=False,
@@ -443,7 +443,7 @@ class GaussianDiffusion:
         if device is None:
             device = next(model.parameters()).device
         z_y = self.encode_first_stage(y, first_stage_model, upsampling=upsampling, up_sample=True)
-
+        if latent_cond == True: model_kwargs['lq'] = z_y
         # generating noise
         if noise is None:
             noise = th.randn_like(z_y)
@@ -537,7 +537,8 @@ class GaussianDiffusion:
             first_stage_model=None,
             model_kwargs=None,
             noise=None,
-            upsampling='bicubic'
+            upsampling='bicubic',
+            latent_cond=False
             ):
         """
         Compute training losses for a single timestep.
@@ -561,6 +562,8 @@ class GaussianDiffusion:
 
         z_y = self.encode_first_stage(y, first_stage_model, up_sample=True, upsampling=upsampling)
         z_start = self.encode_first_stage(x_start, first_stage_model, up_sample=False)
+        if latent_cond and model_kwargs is not None:
+            model_kwargs['lq'] = z_y
 
 
         if noise is None:
