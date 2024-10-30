@@ -765,7 +765,7 @@ class TrainerDifIR(TrainerBase):
                 model_kwargs=model_kwargs,
                 noise=noise,
                 upsampling=self.configs.train.upsampling,
-                latent_cond=self.configs.train.latent_cond
+                latent_cond=self.configs.train.get('latent_cond', False)
             )
             if last_batch or self.num_gpus <= 1:
                 losses, z0_pred, z_t = self.backward_step(compute_losses, micro_data, num_grad_accumulate, tt)
