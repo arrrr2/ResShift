@@ -155,7 +155,7 @@ train:
   microbatch: 16
   num_workers: 4
   prefetch_factor: 4
-  upsampling: 'bicubic'                
+  upsampling: 'nearest-exact'                
   # optimization settings
   weight_decay: 0               
   ema_rate: 0.999
