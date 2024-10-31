@@ -901,7 +901,7 @@ class TrainerDifIR(TrainerBase):
                 for sample in self.base_diffusion.p_sample_loop_progressive(
                         y=im_lq,
                         model=self.ema_model if self.configs.train.use_ema_val else self.model,
-                        latent_cond=self.configs.train.latent_cond,
+                        latent_cond=self.configs.train.get('latent_cond', False),
                         first_stage_model=self.autoencoder,
                         noise=None,
                         clip_denoised=True if self.autoencoder is None else False,
