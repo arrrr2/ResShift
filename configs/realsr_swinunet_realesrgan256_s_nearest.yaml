@@ -148,11 +148,11 @@ train:
   # learning rate
   lr: 5e-5                      # learning rate 
   lr_min: 2e-5                      # learning rate 
-  lr_schedule: ~
+  lr_schedule: cosin
   warmup_iterations: 5000
   # dataloader
-  batch: [64, 8]                
-  microbatch: 16
+  batch: [128, 8]                
+  microbatch: 32
   num_workers: 4
   prefetch_factor: 4
   upsampling: 'nearest-exact'                
